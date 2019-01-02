@@ -1,0 +1,13 @@
+{
+  "name": "accountjdk",
+  "version": "1.0.0",
+  "description": "a general user account management jdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel ./src/index.html"
+  },
+  "keywords": [],
+  "author": "osito_wang",
+  "license": "ISC"
+}
