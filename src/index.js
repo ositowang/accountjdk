@@ -1,1 +1,3 @@
-console.log('Hello World');
+import { login } from './login/init';
+
+login();

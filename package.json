@@ -9,5 +9,11 @@
   },
   "keywords": [],
   "author": "osito_wang",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "es5-shim": "^4.5.12"
+  },
+  "dependencies": {
+    "es6-promise": "^4.2.5"
+  }
 }
