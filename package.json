@@ -11,7 +11,8 @@
   "author": "osito_wang",
   "license": "ISC",
   "devDependencies": {
-    "es5-shim": "^4.5.12"
+    "es5-shim": "^4.5.12",
+    "fetch-mock": "^7.3.0"
   },
   "dependencies": {
     "es6-promise": "^4.2.5"
