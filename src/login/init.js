@@ -9,7 +9,7 @@ import render from './render';
  * @param {Object} opts - login configuration(default to empty object)
  * @param {HTMLElement} opts.container - container to hold the login component
  */
-const login = (opts={}) => {
+const login = (opts = {}) => {
   const defaultOptions = {
     container: document.getElementById('login-container'),
     autoComplete: false,

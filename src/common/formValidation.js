@@ -4,7 +4,12 @@
 
 const rules = {
   mobile: (value) => {
-    return;
+    if (!value.match(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/)) {
+      return {
+        type: 'mobile',
+        message: 'this is not a valid phone number',
+      };
+    }
   },
   email: (value) => {
     return;

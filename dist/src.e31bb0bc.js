@@ -23501,8 +23501,8 @@ var _fetchMock = _interopRequireDefault(require("fetch-mock"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_fetchMock.default.mock('./login', function (opts) {
-  var params = opts.paramsConfig;
+_fetchMock.default.mock('./login', function (url, opts) {
+  var params = opts.params;
 
   if (params.account === '666') {
     if (params.password = '123456') {
@@ -23520,6 +23520,40 @@ _fetchMock.default.mock('./login', function (opts) {
     return {
       code: 400,
       message: 'Wrong Account Number'
+    };
+  }
+});
+
+_fetchMock.default.mock('./getMobileVerifyToken', function (url, opts) {
+  return {
+    code: 200,
+    message: 'success',
+    mobileVerifyToken: '123456'
+  };
+});
+
+_fetchMock.default.mock('./register/getVerifyCode', function (url, opts) {
+  var params = opts.params;
+  return {
+    code: 200,
+    message: 'success',
+    mobile: params.mobile
+  };
+});
+
+_fetchMock.default.mock('./register/mobile', function (url, opts) {
+  var params = opts.params;
+
+  if (params.verifyCode === '123456') {
+    return {
+      code: 200,
+      message: 'success',
+      token: 'abcdefg'
+    };
+  } else {
+    return {
+      code: 400,
+      message: 'success'
     };
   }
 });
@@ -23570,7 +23604,12 @@ exports.validate = void 0;
  */
 var rules = {
   mobile: function mobile(value) {
-    return;
+    if (!value.match(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/)) {
+      return {
+        type: 'mobile',
+        message: 'this is not a valid phone number'
+      };
+    }
   },
   email: function email(value) {
     return;
@@ -23640,6 +23679,7 @@ var _default = function _default() {
   var $loginForm = document.getElementById('login-form');
   var $loginBtn = document.getElementById('login-btn');
   var $loginAccount = document.getElementById('login-account-username');
+  var $clearAccount = document.getElementById('clear-account-name');
   var $loginPassword = document.getElementById('login-account-password');
   var $loginRemember = document.getElementById('login-remember');
   var $loginError = document.getElementById('login-error'); //events bind starts  here
@@ -23718,7 +23758,7 @@ var _default = function _default() {
 
   $loginAccount.oninput = function () {};
 
-  $clearAccoount.onclick = function () {};
+  $clearAccount.onclick = function () {};
 
   $loginPassword.oninput = function () {};
 };
@@ -23793,13 +23833,419 @@ var login = function login() {
 };
 
 exports.login = login;
-},{"../common/polyfill":"common/polyfill.js","./event":"login/event.js","./render":"login/render.js"}],"index.js":[function(require,module,exports) {
+},{"../common/polyfill":"common/polyfill.js","./event":"login/event.js","./render":"login/render.js"}],"images/ok-fill.png":[function(require,module,exports) {
+module.exports = "/ok-fill.9e0414d3.png";
+},{}],"images/tip-fill.png":[function(require,module,exports) {
+module.exports = "/tip-fill.a2f02c93.png";
+},{}],"register/mobile/render.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _okFill = _interopRequireDefault(require("../../images/ok-fill.png"));
+
+var _tipFill = _interopRequireDefault(require("../../images/tip-fill.png"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var tpl = function tpl() {
+  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return "<div id=\"register-mobile-wrapper\" class=\"register-mobile-wrapper\">\n        <form id=\"register-mobile-form\" onsubmit=\"return false\">\n            <label>\n                <span>Mobile\uFF1A </span>\n                <input id=\"register-mobile-input\" name=\"mobile\" type=\"text\" placeholder=\"".concat(opts.mobilePlaceHolder || '', "\" valid=\"notEmpty, mobile\">\n            </label>\n            <label>\n                <span>Verify\uFF1A </span>\n                <div id=\"register-verify-wrapper\" class=\"register-verify-wrapper\"></div>\n            </label>\n            <input id=\"register-verify-btn\" class=\"disabled\" disabled type=\"submit\" value=\"Next\">\n        </form>\n        <div class=\"register-verify-dialog\" id=\"register-verify-dialog\">\n            <div class=\"register-verify-dialog-header\">\n                <div class=\"register-verify-dialog-close\" id=\"register-verify-dialog-close\"></div>\n            </div>\n            <p class=\"register-tip\">\n                <img src=").concat(_okFill.default, ">The code has been sent to your mobile, it will expire in 15 minutes\n            </p>\n            <form id=\"register-verify-form\" onsubmit=\"return false\">\n                <label>\n                    <span>Mobile\uFF1A </span>\n                    <div id=\"register-verify-mobile\"></div>\n                </label>\n                <label>\n                    <span>Code\uFF1A </span>\n                    <input type=\"text\" name=\"verify\" id=\"register-verify-input\">\n                </label>\n                <label>\n                    <span>&nbsp;</span>\n                    <div class=\"register-tip\"><img src=").concat(_tipFill.default, ">The code has been sent to your mobile, please check</div>\n                </label>\n                <input id=\"register-mobile-btn\" class=\"disabled\" disabled type=\"submit\" value=\"Confirm\">\n            </form>\n    </div>");
+};
+
+var _default = function _default(conf) {
+  conf.container.innerHTML = tpl(conf);
+};
+
+exports.default = _default;
+},{"../../images/ok-fill.png":"images/ok-fill.png","../../images/tip-fill.png":"images/tip-fill.png"}],"common/verifySlider.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var render = Symbol('render');
+var event = Symbol('event');
+var style = "<style>\n    .vs-wrapper {\n        position: relative;\n        width: 100%;\n        height: 100%;\n    }\n\n    .vs-moved-bg {\n        background: green;\n        width: 0;\n        position: absolute;\n        z-index: 999;\n        height: 100%;\n    }\n\n    .vs-unmoved-bg {\n        background: gray;\n        width: 100%;\n        position:absolute\n        z-index: 998;\n        height: 100%;\n    }\n\n    .vs-text {\n        position: absolute;\n        width: 100%;\n        top: 0;\n        z-index: 1000;\n        backgound: rgba(0,0,0,0);\n        text-align: center;\n    }\n\n    .vs-move-btn {\n        height: 100%;\n        width: 30px;\n        background: #333333;\n        position: absolute;\n        top: 0;\n        left: 0;\n        z-index: 1001;\n    }\n</style>";
+
+var Slider =
+/*#__PURE__*/
+function () {
+  function Slider(opts) {
+    _classCallCheck(this, Slider);
+
+    this.opts = opts;
+
+    if (!opts.container) {
+      throw 'Please configure the container for this slider';
+    } else {
+      this[render](opts);
+      this[event](opts);
+    }
+  }
+
+  _createClass(Slider, [{
+    key: render,
+    value: function value(opts) {
+      var unsuccessTip = opts.unsuccessTip || 'Please toggle to the Right';
+      var tpl = style + "\n            <div id=\"vs-wrapper\" class=\"vs-wrapper\">\n                <div id=\"vs-moved-bg\" class=\"vs-moved-bg\"></div>\n                <span id=\"vs-move-btn\" class=\"vs-move-btn\"></span>\n                <div id=\"vs-unmoved-bg\" class=\"vs-unmoved-bg\"></div>\n                <span id=\"vs-text\" class=\"vs-text\" ondrag=\"return false;\">".concat(unsuccessTip, "</span>\n            </div>\n        ");
+      opts.container.innerHTML = tpl;
+    }
+  }, {
+    key: event,
+    value: function value(opts) {
+      var _this = this;
+
+      var $btn = document.getElementById('vs-move-btn');
+      var $moved = document.getElementById('vs-moved-bg');
+      var $wrapper = document.getElementById('vs-wrapper');
+      var $text = document.getElementById('vs-text');
+
+      var reset = function reset() {
+        _this.startX = 0;
+        _this.start = false;
+        _this.end = false;
+        $btn.style.left = '0px';
+        $moved.style.width = '0px';
+        _this.offsetRecord = [];
+        _this.startY = 0;
+      };
+
+      window.onmousemove = function (e) {
+        if (_this.start && !_this.end) {
+          var offsetX = e.pageX - _this.startX;
+          var offsetY = e.pageY - _this.startY;
+
+          _this.offsetRecord.push(offsetX + ',' + offsetY);
+
+          $btn.style.left = offsetX + 'px';
+          $moved.style.width = offsetX + 'px';
+          var movedLength = $moved.offsetLeft + parseInt(window.getComputedStyle($moved).width);
+          var totalLength = parseInt(window.getComputedStyle($wrapper).width) - parseInt(window.getComputedStyle($btn).width);
+
+          if (movedLength >= totalLength) {
+            _this.end = true;
+            _this.start = false; //in case the user move the block out of the scope.
+
+            $btn.style.left = totalLength + 'px';
+            $moved.style.width = totalLength + 'px'; //success callback
+
+            if (opts.success) {
+              opts.success($wrapper, $text, _this.offsetRecord);
+            }
+          }
+        }
+      };
+
+      window.onmouseup = function () {
+        if (!_this.end) {
+          reset();
+        }
+      }; // record the initial place when mouse down
+
+
+      $btn.onmousedown = function (e) {
+        _this.start = true;
+        _this.startX = e.pageX;
+        _this.startY = e.pageY;
+        _this.offsetRecord = [];
+      };
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this[render](this.opts);
+      this[event](this.opts);
+    }
+  }]);
+
+  return Slider;
+}();
+
+var _default = Slider;
+exports.default = _default;
+},{}],"common/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeClass = exports.addClass = void 0;
+
+var addClass = function addClass(obj, cls) {
+  obj.className.trim();
+
+  if (!hasClass(obj, cls)) {
+    obj.className += ' ' + cls;
+  }
+};
+
+exports.addClass = addClass;
+
+var removeClass = function removeClass(obj, cls) {
+  if (hasClass(obj, cls)) {
+    var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+    obj.className = obj.className.replace(reg, ' ');
+  }
+};
+
+exports.removeClass = removeClass;
+
+var hasClass = function hasClass(obj, cls) {
+  return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+};
+},{}],"register/mobile/event.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _verifySlider = _interopRequireDefault(require("../../common/verifySlider"));
+
+var _fetch = require("../../common/fetch");
+
+var _utils = require("../../common/utils");
+
+var _formValidation = require("../../common/formValidation");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var _default = function _default(conf) {
+  var mobileVerifyToken;
+  var checkResult;
+  var $mobileInput = document.getElementById('register-mobile-input');
+  var $verifyInput = document.getElementById('register-verify-input');
+  var $verifyBtn = document.getElementById('register-verify-btn');
+  var $mobileBtn = document.getElementById('register-mobile-btn');
+  var $mobileForm = document.getElementById('register-verify-form');
+  var $verifyForm = document.getElementById('register-mobile-form');
+  var $verifyMobile = document.getElementById('register-verify-mobile');
+  var $dialog = document.getElementById('register-verify-dialog');
+  var $dialogClose = document.getElementById('register-verify-dialog-close');
+  var slider = new _verifySlider.default({
+    container: document.getElementById('register-verify-wrapper'),
+    success: function () {
+      var _success = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee($wrapper, $text, offsetArr) {
+        var offSetMsg, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                offSetMsg = offsetArr.join(':');
+                _context.next = 3;
+                return (0, _fetch.fetchPost)('./getMobileVerifyToken', {
+                  offSetMsg: offSetMsg
+                });
+
+              case 3:
+                data = _context.sent;
+
+                if (data.code === 200) {
+                  mobileVerifyToken = data.mobileVerifyToken;
+                  (0, _utils.addClass)($wrapper, 'success');
+                  $text.innerHTML = 'Success';
+                } else {
+                  (0, _utils.addClass)($wrapper, 'failed');
+                  $text.innerHTML = 'Failed';
+                }
+
+                $verifyBtn.removeAttribute('disabled');
+                (0, _utils.removeClass)($verifyBtn, 'disabled');
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function success(_x, _x2, _x3) {
+        return _success.apply(this, arguments);
+      }
+
+      return success;
+    }()
+  });
+  $verifyBtn.onclick =
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2() {
+    var type, data;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            checkResult = (0, _formValidation.validate)($verifyForm);
+
+            if (!checkResult.length) {
+              _context2.next = 6;
+              break;
+            }
+
+            type = checkResult[0].type;
+
+            if (type === 'notEmpty') {
+              alert('Please enter your mobile number');
+            } else if (type === 'mobile') {
+              alert('Please make sure you have the correct mobile number');
+            }
+
+            _context2.next = 10;
+            break;
+
+          case 6:
+            _context2.next = 8;
+            return (0, _fetch.fetchPost)('./register/getVerifyCode', {
+              mobile: $mobileInput.value,
+              mobileVerifyToken: mobileVerifyToken
+            });
+
+          case 8:
+            data = _context2.sent;
+
+            if (data.code === 200) {
+              $dialog.style.display = 'block';
+              $verifyMobile.innerHTML = data.mobile;
+              mobileVerifyToken = '';
+              slider.reset();
+            } else {
+              alert('Verify mobile failed');
+            }
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this);
+  }));
+
+  $dialogClose.onclick = function () {
+    $dialog.style.display = 'none';
+    mobileVerifyToken = '';
+    slider.reset();
+  }; //clear out the illegal NaN value and more than the length
+
+
+  $verifyInput.oninput = function () {
+    var MSGLENGTH = 6;
+    var value = $verifyInput.value;
+    $verifyInput.value = value.replace(/\D/g, '');
+
+    if (value.length > MSGLENGTH - 1) {
+      $mobileBtn.removeAttribute('disabled');
+      (0, _utils.removeClass)($mobileBtn, 'disabled');
+      (0, _utils.addClass)($mobileBtn, 'bth-primary');
+
+      if (value.length > MSGLENGTH) {
+        $verifyInput.value = value.substring(0, MSGLENGTH);
+      }
+    } else {
+      $mobileBtn.setAttribute('disabled', 'disabled');
+      (0, _utils.removeClass)($mobileBtn, 'bth-primary');
+      (0, _utils.addClass)($mobileBtn, 'disabled');
+    }
+  };
+
+  $mobileBtn.onclick =
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3() {
+    var data;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return (0, _fetch.fetchPost)('./register/mobile', {
+              mobile: $verifyMobile.innerHTML,
+              verifyCode: $verifyInput.value,
+              mobileVerifyToken: mobileVerifyToken
+            });
+
+          case 2:
+            data = _context3.sent;
+
+            if (data.code === 200) {
+              conf.success && conf.success(data.token);
+            } else {
+              alert('The code is invalid');
+            }
+
+          case 4:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this);
+  }));
+};
+
+exports.default = _default;
+},{"../../common/verifySlider":"common/verifySlider.js","../../common/fetch":"common/fetch.js","../../common/utils":"common/utils.js","../../common/formValidation":"common/formValidation.js"}],"register/mobile/init.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.regMobile = void 0;
+
+require("../../common/polyfill.js");
+
+var _render = _interopRequireDefault(require("./render"));
+
+var _event = _interopRequireDefault(require("./event"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var regMobile = function regMobile() {
+  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var defaultOpts = {
+    mobilePlaceholder: 'Please enter your mobile number'
+  };
+  var options = Object.assign(defaultOpts, opts);
+  (0, _render.default)(options);
+  (0, _event.default)(options);
+};
+
+exports.regMobile = regMobile;
+},{"../../common/polyfill.js":"common/polyfill.js","./render":"register/mobile/render.js","./event":"register/mobile/event.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _init = require("./login/init");
 
+var _init2 = require("./register/mobile/init");
+
 (0, _init.login)();
-},{"./login/init":"login/init.js"}],"C:/Users/Osito/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _init2.regMobile)({
+  container: document.getElementById('container'),
+  success: function success(token) {
+    location.replace('register-info.html?token=' + token);
+  }
+});
+},{"./login/init":"login/init.js","./register/mobile/init":"register/mobile/init.js"}],"C:/Users/Osito/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -23826,7 +24272,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "3413" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7532" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

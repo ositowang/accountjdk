@@ -12,7 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "es5-shim": "^4.5.12",
-    "fetch-mock": "^7.3.0"
+    "fetch-mock": "^7.3.0",
+    "less": "^3.9.0"
   },
   "dependencies": {
     "es6-promise": "^4.2.5"

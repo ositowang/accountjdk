@@ -5,6 +5,7 @@ export default (opts = {}) => {
   const $loginForm = document.getElementById('login-form');
   const $loginBtn = document.getElementById('login-btn');
   const $loginAccount = document.getElementById('login-account-username');
+  const $clearAccount = document.getElementById('clear-account-name');
   const $loginPassword = document.getElementById('login-account-password');
   const $loginRemember = document.getElementById('login-remember');
   const $loginError = document.getElementById('login-error');
@@ -44,7 +45,7 @@ export default (opts = {}) => {
 
   $loginAccount.oninput = () => {};
 
-  $clearAccoount.onclick = () => {};
+  $clearAccount.onclick = () => {};
 
   $loginPassword.oninput = () => {};
 };
