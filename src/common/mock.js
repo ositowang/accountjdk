@@ -1,4 +1,5 @@
 import fetchMock from 'fetch-mock';
+import regionData from './data/region-data';
 
 fetchMock.mock('./login', (url, opts) => {
   const params = opts.params;
@@ -40,4 +41,8 @@ fetchMock.mock('./register/mobile', (url, opts) => {
       message: 'success',
     };
   }
+});
+
+fetchMock.mock('./region-data', (url, opts) => {
+  return { code: 200, message: 'success', data: regionData };
 });

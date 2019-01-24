@@ -11,9 +11,35 @@ const rules = {
       };
     }
   },
-  email: (value) => {
-    return;
+  email: (v) => {
+    if (
+      !v.match(
+        /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+      )
+    ) {
+      return {
+        type: 'email',
+        message: 'The email you enter is invalid',
+      };
+    }
   },
+
+  onlyFFFF: (v) => {
+    if (v.match(/\u{ffff}-\u{fffff}/u)) {
+      return {
+        type: 'onlyFFFF',
+        message: 'Only UTF-8 less than FFFFf is supported',
+      };
+    }
+  },
+  // noOther: (v) => {
+  //   if (v.match(/\p{C}/u)) {
+  //     return {
+  //       type: 'noOther',
+  //       message: 'You have entered invalid character',
+  //     };
+  //   }
+  // },
   notEmpty: (value) => {
     if (!value.trim()) {
       return {

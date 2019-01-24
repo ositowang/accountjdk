@@ -14,4 +14,17 @@ const fetchPost = (url, paramsConfig) => {
   });
 };
 
-export { fetchPost };
+const fetchJSON = (url, params) => {
+  return fetch(url, {
+    method: 'GET',
+    headers: {},
+    credentials: 'include',
+    params: params,
+  }).then((res) => {
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    return res.json();
+  });
+};
+export { fetchPost, fetchJSON };
