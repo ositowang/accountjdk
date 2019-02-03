@@ -1,0 +1,5 @@
+
+# ignore the following folders
+/dist
+/.cache
+/node_modules
