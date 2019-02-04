@@ -1,4 +1,5 @@
 import Region from '../../common/region';
+import { fetchJSON } from '../../common/fetch';
 
 const tpl = (config = {}) => {
   return `<div id="register-info-wrapper" class="register-info-wrapper">
@@ -43,10 +44,25 @@ const tpl = (config = {}) => {
     </div>`;
 };
 
-export default (conf) => {
-  conf.container.innerHTML = tpl(conf);
-  const region = new Region({
-    container: document.getElementById('register-info-address'),
-    name: 'region',
-  });
+export default async (conf) => {
+  if (!conf.update) {
+    conf.container.innerHTML = tpl();
+    const region = new Region({
+      container: document.getElementById('register-info-address'),
+      name: 'region',
+    });
+  } else {
+    const result = await fetchJSON('./profile', {});
+    if (result.code === 200) {
+      conf.container.innerHTML = tpl(result.data);
+      const regionData = result.data.regionCode
+        ? result.data.regionCode.split(',').map((item) => parseInt(item))
+        : '';
+      const region = new Region({
+        container: document.getElementById('register-info-address'),
+        name: 'region',
+        initData: regionData,
+      });
+    }
+  }
 };

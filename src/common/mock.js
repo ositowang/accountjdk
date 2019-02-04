@@ -48,3 +48,18 @@ fetchMock.mock('./region-data', (url, opts) => {
 });
 
 fetchMock.mock('/register/payment', { code: 200, message: 'success' });
+
+fetchMock.mock('./profile', {
+  code: 200,
+  message: 'success',
+  data: {
+    nickname: 'John',
+    mobile: '5086672989',
+    email: 'test@gmail.com',
+    realname: 'John Hook',
+    sex: 1,
+    birthday: '1997-09-06',
+    regionCode: '1,1,1',
+    regionString: 'Beijing',
+  },
+});

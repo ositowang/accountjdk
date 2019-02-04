@@ -46,8 +46,8 @@ class Region {
       provinceOptions += `<option value=${item.id}>${item.name}</option>`;
     });
     $provinceSelect.innerHTML = provinceOptions;
-    const provinceChange = () => {
-      const index = parseInt($provinceSelect.value);
+    const provinceChange = (idx) => {
+      const index = idx ? idx : parseInt($provinceSelect.value);
       const citys = regionData[index - 1].city;
       let cityOptions = '';
       provinceSelected = index;
@@ -55,8 +55,9 @@ class Region {
         cityOptions += `<option value=${item.id}>${item.name}</option>`;
       });
       $citySelect.innerHTML = cityOptions;
+      index && ($provinceSelect.value = index);
     };
-    const cityChange = () => {
+    const cityChange = (index) => {
       let areas = regionData[provinceSelected - 1].city.filter((item) => {
         return item.id === parseInt($citySelect.value);
       })[0].district;
@@ -67,13 +68,23 @@ class Region {
         areaOptions += `<option value=${item.id}>${item.name}</option>`;
       });
       $areaSelect.innerHTML = areaOptions;
+      index && ($citySelect.value = index);
     };
 
-    const areaChange = () => {
+    const areaChange = (index) => {
       areaSelected = parseInt($areaSelect.value);
       $result.value =
         provinceSelected + ',' + citySelected + ',' + areaSelected;
+      index && ($citySelect.value = index);
     };
+
+    if (opts.initData && Array.isArray(opts.initData)) {
+      const data = opts.initData;
+      console.log(data);
+      data[0] && provinceChange(data[0]);
+      data[1] && cityChange(data[1]);
+      data[2] && areaChange(data[2]);
+    }
 
     $provinceSelect.onchange = () => {
       provinceChange();

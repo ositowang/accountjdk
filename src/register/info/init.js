@@ -9,8 +9,9 @@ const regInfo = (opts) => {
   }
   const defaultOpts = {};
   const options = Object.assign(defaultOpts, opts);
-  render(options);
-  bindEvent(options);
+  render(options).then(() => {
+    bindEvent(options);
+  });
 };
 
 export { regInfo };

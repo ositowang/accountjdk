@@ -19,11 +19,19 @@ if (document.location.href === 'http://localhost:1234/registerMobile.html') {
 if (document.location.href === 'http://localhost:1234/registerInfo.html') {
   regInfo({
     container: document.getElementById('container'),
+    update: false,
   });
 }
 
 if (document.location.href === 'http://localhost:1234/registerPayment.html') {
   regPayment({
     container: document.getElementById('container'),
+  });
+}
+
+if (document.location.href === 'http://localhost:1234/profile.html') {
+  regInfo({
+    container: document.getElementById('profile-wrap'),
+    update: true,
   });
 }
