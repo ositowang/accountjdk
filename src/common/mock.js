@@ -23,7 +23,7 @@ fetchMock.mock('./register/getVerifyCode', (url, opts) => {
   return {
     code: 200,
     message: 'success',
-    mobile: params.mobile,
+    mobile: params.mobile
   };
 });
 
@@ -33,12 +33,12 @@ fetchMock.mock('./register/mobile', (url, opts) => {
     return {
       code: 200,
       message: 'success',
-      token: 'abcdefg',
+      token: 'abcdefg'
     };
   } else {
     return {
       code: 400,
-      message: 'success',
+      message: 'success'
     };
   }
 });
@@ -60,6 +60,43 @@ fetchMock.mock('./profile', {
     sex: 1,
     birthday: '1997-09-06',
     regionCode: '1,1,1',
-    regionString: 'Beijing',
-  },
+    regionString: 'Beijing'
+  }
+});
+
+fetchMock.mock('./delivery-address', {
+  code: 200,
+  message: 'success',
+  data: [
+    {
+      name: 'David',
+      regionSting: 'Beijing',
+      regionCode: '1,1,1',
+      detailAddress: 'Peace St',
+      postalcode: '100000',
+      mobile: 18512567389,
+      telephone: '',
+      addrId: 345
+    },
+    {
+      name: 'Tom',
+      regionSting: 'Beijing',
+      regionCode: '1,1,2',
+      detailAddress: 'Peace St',
+      postalcode: '100000',
+      mobile: 18512567389,
+      telephone: '',
+      addrId: 346
+    },
+    {
+      name: 'Jerry',
+      regionSting: 'Shanghai',
+      regionCode: '9,73,723',
+      detailAddress: 'Peace St',
+      postalcode: '100000',
+      mobile: 18517384387,
+      telephone: '',
+      addrId: 347
+    }
+  ]
 });
